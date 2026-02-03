@@ -1,2 +1,201 @@
-# Moon-Valentine
-Moon-Valentine
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>For Moon ❤️</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Segoe UI', sans-serif;
+      overflow: hidden;
+      color: white;
+    }
+
+    .container {
+      text-align: center;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      margin-bottom: 25px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 20px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    button {
+      font-size: 1.1rem;
+      padding: 12px 32px;
+      border: none;
+      border-radius: 30px;
+      cursor: pointer;
+      transition: 0.2s ease;
+      position: relative;
+    }
+
+    .yes {
+      background: #ff4d6d;
+      color: white;
+      box-shadow: 0 0 18px #ff4d6d;
+    }
+
+    .no {
+      background: #555;
+      color: white;
+    }
+
+    button:hover {
+      transform: scale(1.1);
+    }
+
+    canvas {
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+    }
+
+    .message {
+      margin-top: 25px;
+      font-size: 1.4rem;
+      color: #ffccd5;
+      display: none;
+      animation: fadeIn 2s ease;
+    }
+
+    .signature {
+      margin-top: 10px;
+      font-size: 1.1rem;
+      color: #ffd6e0;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+
+  <canvas id="fireworks"></canvas>
+
+  <!-- Romantic background music -->
+  <audio id="music" loop>
+    <source src="https://cdn.pixabay.com/download/audio/2023/03/28/audio_6e5e1c2bb0.mp3" type="audio/mpeg">
+  </audio>
+
+  <div class="container">
+    <h1>Moon, will you be my forever Valentine? 💖</h1>
+
+    <div class="buttons">
+      <button class="yes" onclick="startLove()">Yes ❤️</button>
+      <button class="no" id="noBtn">No</button>
+    </div>
+
+    <div class="message" id="loveMessage">
+      You just made my heart explode with happiness 🎆💘
+    </div>
+
+    <div class="signature" id="signature">
+      — Yours forever, Yuvraj ❤️
+    </div>
+  </div>
+
+  <script>
+    /* NO button runs away */
+    const noBtn = document.getElementById("noBtn");
+    noBtn.addEventListener("mouseenter", moveNo);
+    noBtn.addEventListener("touchstart", moveNo);
+
+    function moveNo() {
+      const x = Math.random() * (window.innerWidth - 120);
+      const y = Math.random() * (window.innerHeight - 60);
+      noBtn.style.position = "absolute";
+      noBtn.style.left = x + "px";
+      noBtn.style.top = y + "px";
+    }
+
+    /* Fireworks */
+    const canvas = document.getElementById("fireworks");
+    const ctx = canvas.getContext("2d");
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    let particles = [];
+
+    function random(min, max) {
+      return Math.random() * (max - min) + min;
+    }
+
+    function createFirework() {
+      const x = random(100, canvas.width - 100);
+      const y = random(100, canvas.height / 2);
+
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x,
+          y,
+          angle: random(0, Math.PI * 2),
+          speed: random(2, 6),
+          radius: random(1, 3),
+          alpha: 1,
+          decay: random(0.01, 0.02),
+          color: `hsl(${random(0, 360)}, 100%, 60%)`
+        });
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      particles.forEach((p, i) => {
+        p.x += Math.cos(p.angle) * p.speed;
+        p.y += Math.sin(p.angle) * p.speed;
+        p.alpha -= p.decay;
+
+        if (p.alpha <= 0) {
+          particles.splice(i, 1);
+        } else {
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = p.color;
+          ctx.globalAlpha = p.alpha;
+          ctx.fill();
+        }
+      });
+
+      ctx.globalAlpha = 1;
+      requestAnimationFrame(animate);
+    }
+
+    function startLove() {
+      document.getElementById("loveMessage").style.display = "block";
+      document.getElementById("signature").style.display = "block";
+      document.getElementById("music").play();
+
+      setInterval(createFirework, 600);
+      animate();
+    }
+
+    window.addEventListener("resize", () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+  </script>
+
+</body>
+</html>
